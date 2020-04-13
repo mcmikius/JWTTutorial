@@ -1,7 +1,7 @@
 import Vapor
 
 /// Controls basic CRUD operations on `Todo`s.
-final class TodoController {
+final class TodoController: RouteCollection {
     
     func boot(router: Router) throws {
         router.get("todos", use: index)

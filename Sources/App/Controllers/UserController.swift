@@ -14,8 +14,8 @@ final class UserController: RouteCollection {
     func boot(router: Router) throws {
         let group = router.grouped("v1/account")
         
-        group.post(User.self, at: "/sign-up", use: self.signUp)
-        group.post(User.self, at: "/sign-in", use: self.signIn)
+        group.post(User.self, at: "/sign-up", use: signUp)
+        group.post(User.self, at: "/sign-in", use: signIn)
     }
     
     func signUp(_ req: Request, user: User) throws -> Future<ResponseMessage> {
