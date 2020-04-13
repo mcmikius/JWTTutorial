@@ -43,8 +43,11 @@ final class UserController: RouteCollection {
                     let tokenData = try signer.sign(jwt)
                     if let token = String(data: tokenData, encoding: .utf8) {
                         let receivedJWT = try JWT<AccessTokenPayload>(from: token, verifiedUsing: JWTConfig.signer)
-                        let accessTokenResponse = AccessTokenResponse(accessToken: token, expiredAt: receivedJWT.payload.expirationAt.value)
-                        return req.future(accessTokenResponse)
+                        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                        let refreshToken = String((0 ... 40).map { _ in letters.randomElement()! })
+                        let accessTokenResponse = AccessTokenResponse(refreshToken: refreshToken, accessToken: token, expiredAt: receivedJWT.payload.expirationAt.value)
+                        
+                        return RefreshToken(token: refreshToken, userID: try persistedUser.requireID()).save(on: req).transform(to: accessTokenResponse)
                     } else {
                         throw JWTError.createJWT
                     }
