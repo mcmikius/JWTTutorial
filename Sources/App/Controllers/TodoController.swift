@@ -2,6 +2,13 @@ import Vapor
 
 /// Controls basic CRUD operations on `Todo`s.
 final class TodoController {
+    
+    func boot(router: Router) throws {
+        router.get("todos", use: index)
+        router.post("todos", use: create)
+        router.delete("todos", Todo.parameter, use: delete)
+    }
+    
     /// Returns a list of all `Todo`s.
     func index(_ req: Request) throws -> Future<[Todo]> {
         return Todo.query(on: req).all()
